@@ -1,6 +1,7 @@
 module doveralls.app;
 import doveralls.coverallsargs;
 
+import yajl.encoder;
 import std.getopt, std.stdio;
 
 int main( string[] args )
@@ -11,7 +12,11 @@ int main( string[] args )
         return 1;
     }
 
-
+    Encoder.Option option;
+    option.beautify = true;
+    option.indentString = "    ";
+    Encoder encoder = Encoder( option );
+    writeln( encoder.encode( CoverallsArgs() ) );
 
     return 0;
 }
