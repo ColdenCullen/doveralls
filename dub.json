@@ -1,0 +1,6 @@
+{
+    "name": "doveralls",
+    "description": "Upload D code coverage results to coveralls.io.",
+    "copyright": "Copyright © 2014, Colden Cullen",
+    "authors": [ "Colden Cullen" ]
+}
