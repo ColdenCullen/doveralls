@@ -1,9 +1,13 @@
 module doveralls.request;
 
-import std.conv;
+import medea;
+import std.json, std.conv;
 
-int sendData( string json )
+int sendData( Value jsonObject )
 {
+    auto root = jsonObject.toJSONValue();
+    string json = toJSON( &root, false );
+
     /*
 
     import vibe.d;

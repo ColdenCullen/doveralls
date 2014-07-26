@@ -2,8 +2,7 @@ module doveralls.doveralls;
 import doveralls.args, doveralls.config, doveralls.sourcefiles, doveralls.git,
        doveralls.request;
 
-import std.getopt, std.string, std.conv, std.stdio, std.datetime, std.json,
-       std.process;
+import std.getopt, std.string, std.conv, std.stdio, std.process;
 
 // Upload data
 int execute()
@@ -43,11 +42,24 @@ int execute()
     args.git = getGitEntry( Doveralls.repoPath );
 
     // Get time info
-    args.run_at = Clock.currTime.toSimpleString().split( "." )[ 0 ];
+    args.run_at = getCurrentTime();
 
     // Encode json
-    auto root = args.toJson().toJSONValue();
-    string json = toJSON( &root, false );
+    return sendData( args.toJson() );
+}
 
-    return sendData( json );
+string getCurrentTime()
+{
+    // Target: 2013-02-18 00:52:48 -0800
+    import std.array, std.datetime, std.format, std.conv;
+    auto now = Clock.currTime;
+
+    auto writer = appender!string();
+    writer.formattedWrite(
+        "%d-%d-%d %02d:%02d:%02d %0" ~ (now.utcOffset.hours < 0 ? 3 : 2).to!string ~ "d00",
+        now.year, now.month, now.day,
+        now.hour, now.minute, now.second,
+        now.utcOffset.hours );
+
+    return writer.data;
 }
