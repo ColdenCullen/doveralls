@@ -4,6 +4,8 @@
     "copyright": "Copyright © 2014, Colden Cullen",
     "authors": [ "Colden Cullen" ],
     "dependencies": {
-        "yajl": "~master"
-    }
+        "dlibgit": "~>0.50",
+        "medea": "~master",
+    },
+    "targetType": "executable"
 }

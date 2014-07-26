@@ -1,9 +1,9 @@
 /**
  * Defines everything required to interact with the Coveralls.io API.
  */
-module doveralls.coverallsargs;
+module doveralls.args;
 
-import std.typecons;
+import std.typecons, std.array;
 
 /**
  * A hash representing the coverage data from a single run of a test suite.
@@ -78,6 +78,24 @@ public:
      */
     string run_at;
 
+    /// Converts the instance to json
+    auto toJson()
+    {
+        import medea;
+        import std.algorithm, std.array;
+
+        ObjectValue root = new ObjectValue;
+
+        mixin( stringValue!q{repo_token} );
+        mixin( stringValue!q{service_name} );
+        mixin( stringValue!q{service_job_id} );
+        root[ "source_files" ] = new ArrayValue( cast(Value[])source_files.map!( file => file.toJson() ).array() );
+        root[ "git" ] = git.toJson();
+        mixin( stringValue!q{run_at} );
+
+        return root;
+    }
+
 static: // Struct definitions
     struct SourceFile
     {
@@ -115,6 +133,27 @@ static: // Struct definitions
          *     [null, 1, 0, null, 4, 15, null]
          */
         Nullable!uint[] coverage;
+
+        /// Converts instance to json.
+        auto toJson()
+        {
+            import medea;
+
+            Value[] coverageValues;
+            foreach( val; coverage )
+            {
+                if( val.isNull )
+                    coverageValues ~= new NullValue;
+                else
+                    coverageValues ~= new UIntegerValue( val );
+            }
+
+            return new ObjectValue( [
+                "name": cast(Value) new StringValue( name ),
+                "source": cast(Value) new StringValue( source ),
+                "coverage": cast(Value) new ArrayValue( coverageValues )
+            ] );
+        }
     }
 
     struct GitEntry
@@ -124,21 +163,65 @@ static: // Struct definitions
         string branch;
         Remote[] remotes;
 
+        auto toJson()
+        {
+            import medea;
+            import std.algorithm, std.array;
+            ObjectValue root = new ObjectValue;
+
+            root[ "head" ] = head.toJson();
+            mixin( stringValue!q{branch} );
+            root[ "remotes" ] = new ArrayValue( cast(Value[])remotes.map!( remote => remote.toJson() ).array() );
+
+            return root;
+        }
+
     static: // Struct definitions
         struct Commit
         {
+        public:
             string id;
             string author_name;
             string author_email;
             string committer_name;
             string committer_email;
             string message;
+
+            mixin( stringOnlyToJson!q{Commit} );
         }
 
         struct Remote
         {
             string name;
             string url;
+
+            mixin( stringOnlyToJson!q{Remote} );
         }
     }
 }
+
+private enum stringOnlyToJson( string struckt ) = q{
+    auto toJson()
+    {
+        import medea;
+        ObjectValue root = new ObjectValue;
+
+        foreach( memberName; __traits(allMembers, $struckt) )
+        {
+            static if( is( typeof(__traits(getMember, this, memberName )) == string ) )
+            {
+                mixin( stringValue!memberName );
+            }
+        }
+
+        return root;
+    }
+}.replace( "$struckt", struckt );
+
+private enum stringValue( string name ) = q{
+    if( $name && $name.length )
+    {
+        //root[ "$name" ] = new StringValue( args.$name );
+        root[ "$name" ] = new StringValue( $name );
+    }
+}.replace( "$name", name );
