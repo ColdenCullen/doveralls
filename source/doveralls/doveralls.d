@@ -14,6 +14,12 @@ int execute()
         {
             Doveralls.ciServiceName = "travis-ci";
             Doveralls.ciServiceJobId = environment.get( "TRAVIS_JOB_ID", "" );
+
+            writeln( "Job ID: ", Doveralls.ciServiceJobId );
+        }
+        else
+        {
+            writeln( "$TRAVIS set to ", travis );
         }
     }
 
