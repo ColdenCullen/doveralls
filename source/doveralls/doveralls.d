@@ -2,32 +2,11 @@ module doveralls.doveralls;
 import doveralls.args, doveralls.config, doveralls.sourcefiles, doveralls.git,
        doveralls.request;
 
-import std.getopt, std.string, std.conv, std.stdio, std.process;
+import std.getopt, std.string, std.conv, std.stdio;
 
 // Upload data
 int execute()
 {
-    // If travis, default to travis-ci (travis-pro override required), and get job.
-    if( auto travis = environment.get( "TRAVIS" ) )
-    {
-        if( travis.to!bool )
-        {
-            Doveralls.ciServiceName = "travis-ci";
-            Doveralls.ciServiceJobId = environment.get( "TRAVIS_JOB_ID" );
-
-            if( Doveralls.ciServiceJobId.length == 0 )
-            {
-                Doveralls.ciServiceJobId = environment.get( "TRAVIS_BUILD_ID" );
-            }
-
-            writeln( "Job ID: ", Doveralls.ciServiceJobId );
-        }
-        else
-        {
-            writeln( "$TRAVIS set to ", travis );
-        }
-    }
-
     CoverallsArgs args;
 
     // Get repo information
