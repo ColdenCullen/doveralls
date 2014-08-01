@@ -13,11 +13,11 @@ int execute()
         if( travis.to!bool )
         {
             Doveralls.ciServiceName = "travis-ci";
-            Doveralls.ciServiceJobId = environment.get( "TRAVIS_JOB_ID", "" );
+            Doveralls.ciServiceJobId = environment.get( "TRAVIS_JOB_ID" );
 
             if( Doveralls.ciServiceJobId.length == 0 )
             {
-                Doveralls.ciServiceJobId = environment.get( "TRAVIS_BUILD_ID", "" );
+                Doveralls.ciServiceJobId = environment.get( "TRAVIS_BUILD_ID" );
             }
 
             writeln( "Job ID: ", Doveralls.ciServiceJobId );
