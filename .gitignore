@@ -271,3 +271,4 @@ docs.json
 # Dub Artifacts
 .dub/
 __test__*__
+/.project
