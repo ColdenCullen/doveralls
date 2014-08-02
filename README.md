@@ -4,7 +4,7 @@ Upload D code coverage results to [coveralls.io](https://coveralls.io/).
 
 ### Installation
 
-The best way to install doveralls is by fetching it through dub.
+The best way to install doveralls is by fetching it through [dub](http://code.dlang.org).
 ```
 dub fetch doveralls
 ```
