@@ -38,6 +38,7 @@ int execute()
     return sendData( args.toJson() );
 }
 
+// Get a string representation of the current time.
 string getCurrentTime()
 {
     // Target: 2013-02-18 00:52:48 -0800
