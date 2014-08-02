@@ -2,6 +2,13 @@
 
 Upload D code coverage results to [coveralls.io](https://coveralls.io/).
 
+### Installation
+
+The best way to install doveralls is by fetching it through dub.
+```
+dub fetch doveralls
+```
+
 ### Usage
 
 To use this, it is recommended that you run `dub test --coverage` (currently only present in `HEAD`)
