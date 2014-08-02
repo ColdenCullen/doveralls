@@ -1,12 +1,12 @@
 module app;
 import doveralls.doveralls, doveralls.config;
 
-import std.getopt, std.process, std.conv;
+import std.getopt, std.process, std.conv, std.file;
 
 int main( string[] args )
 {
     // Default to cwd
-    Doveralls.repoPath = ".";
+    Doveralls.repoPath = getcwd();
 
     // If job id is specified, default to "travis-ci", unless it's already been set.
     void jobId( string key, string job )
