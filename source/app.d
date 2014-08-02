@@ -5,6 +5,9 @@ import std.getopt, std.process, std.conv;
 
 int main( string[] args )
 {
+    // Default to cwd
+    Doveralls.repoPath = ".";
+
     // If job id is specified, default to "travis-ci", unless it's already been set.
     void jobId( string key, string job )
     {
