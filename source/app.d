@@ -23,7 +23,7 @@ int main( string[] args )
         "p|path", &Doveralls.repoPath,
         "t|token", &Doveralls.repoToken,
         "j|job", &jobId,
-        "p|travis-pro", &travisPro );
+        "travis-pro", &travisPro );
 
     return execute();
 }
