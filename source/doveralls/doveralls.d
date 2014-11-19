@@ -50,25 +50,11 @@ int execute(string path, string token, string service)
         }
     }
 
+    import std.datetime : Clock, UTC;
+
     auto args = CoverallsArgs(
-        token, service, jobID, getSourceFiles(path), getGitEntry(path), getCurrentTime());
+        token, service, jobID, getSourceFiles(path), getGitEntry(path),
+        Clock.currTime(UTC()).toISOExtString());
 
     return sendData(args.toJson());
-}
-
-// Get a string representation of the current time.
-string getCurrentTime()
-{
-    // Target: 2013-02-18 00:52:48 -0800
-    import std.array, std.datetime, std.format, std.conv;
-    auto now = Clock.currTime;
-
-    auto writer = appender!string();
-    writer.formattedWrite(
-        "%d-%d-%d %02d:%02d:%02d %0" ~ (now.utcOffset.hours < 0 ? 3 : 2).to!string ~ "d00",
-        now.year, now.month, now.day,
-        now.hour, now.minute, now.second,
-        now.utcOffset.hours );
-
-    return writer.data;
 }
