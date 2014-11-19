@@ -1,41 +1,59 @@
 module doveralls.doveralls;
-import doveralls.args, doveralls.config, doveralls.sourcefiles, doveralls.git,
+import doveralls.args, doveralls.sourcefiles, doveralls.git,
        doveralls.request;
 
-import std.getopt, std.string, std.conv, std.stdio;
-
-// Upload data
-int execute()
+int execute(string path, string token, string service)
 {
-    CoverallsArgs args;
+    import std.stdio, std.process : env=environment;
 
-    // Get repo information
-    if( Doveralls.repoToken )
+    string jobID;
+    if (env.get("TRAVIS"))
     {
-        args.repo_token = Doveralls.repoToken;
+        if (!service.length) service = "travis-ci"; // could be travis-pro
+        jobID = env["TRAVIS_JOB_ID"];
     }
-    else if( Doveralls.ciServiceName )
+    else if (env.get("CIRCLECI"))
     {
-        args.service_name = Doveralls.ciServiceName;
-        args.service_job_id = Doveralls.ciServiceJobId;
+        service = "circleci";
+        jobID = env["CIRCLE_BUILD_NUM"];
+    }
+    else if (env.get("SEMAPHORE"))
+    {
+        service = "semaphore";
+        jobID = env["SEMAPHORE_BUILD_NUMBER"];
+    }
+    else if (env.get("JENKINS_URL"))
+    {
+        service = "jenkins";
+        jobID = env["BUILD_NUMBER"];
+    }
+    else if (env.get("CI_NAME"))
+    {
+        service = env["CI_NAME"];
+        jobID = env["CI_BUILD_NUMBER"];
+        version (none) // TODO
+        {
+            build_url = env["CI_BUILD_URL"];
+            branch = env["CI_BRANCH"];
+            pull_request = env["CI_PULL_REQUEST"];
+        }
     }
     else
     {
-        writeln( "Please specify ciServiceName and ciServiceJobId or repoToken." );
-        return 1;
+        service = "coveralls-ruby";
+        token = env.get("COVERALLS_REPO_TOKEN", token);
+        if (!token.length)
+        {
+            stderr.writeln("A repo_token is required when running locally.");
+            stderr.writeln("Either pass one as argument or set the COVERALLS_REPO_TOKEN env variable.");
+            return 1;
+        }
     }
 
-    // Calculate coverage information
-    args.source_files = getSourceFiles( Doveralls.repoPath );
+    auto args = CoverallsArgs(
+        token, service, jobID, getSourceFiles(path), getGitEntry(path), getCurrentTime());
 
-    // Get git information
-    args.git = getGitEntry( Doveralls.repoPath );
-
-    // Get time info
-    args.run_at = getCurrentTime();
-
-    // Encode json
-    return sendData( args.toJson() );
+    return sendData(args.toJson());
 }
 
 // Get a string representation of the current time.
