@@ -7,5 +7,6 @@
     "dependencies": {
         "dlibgit": { "version": "~>0.50", "optional": true },
     },
-    "targetType": "executable"
+    "targetType": "executable",
+    "libs": ["curl"]
 }

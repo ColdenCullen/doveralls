@@ -44,3 +44,10 @@ dub run doveralls -- -t uMKQTqJOiFK3EVELOqxcsduGgMNgHagLF
 # as environment variable
 COVERALLS_REPO_TOKEN=uMKQTqJOiFK3EVELOqxcsduGgMNgHagLF dub run doveralls
 ```
+
+It is also possible to specify a different endpoint by setting the
+`COVERALLS_ENDPOINT` environment variable.
+
+```sh
+COVERALLS_ENDPOINT=http://localhost:8080 dub run coveralls
+```
