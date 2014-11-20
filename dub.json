@@ -6,7 +6,7 @@
     "license": "MIT",
     "dependencies": {
         "dlibgit": { "version": "~>0.50", "optional": true },
-        "medea": "~master",
     },
-    "targetType": "executable"
+    "targetType": "executable",
+    "libs": ["curl"]
 }

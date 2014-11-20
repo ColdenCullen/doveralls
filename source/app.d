@@ -1,32 +1,37 @@
 module app;
-import doveralls.doveralls, doveralls.config;
+import doveralls.doveralls;
 
-import std.getopt, std.process, std.conv, std.file;
+enum usage = q"USAGE
+Usage:
+  doveralls [options]
 
-int main( string[] args )
+  -d|--dump     dump report to stdout instead of uploading it
+  -p|--path     repo path, default is current dir
+  -t|--token    set the repo_token, required to run locally
+  --travis-pro  required when using Travis Pro
+USAGE";
+
+int main(string[] args)
 {
-    // Default to cwd
-    Doveralls.repoPath = getcwd();
+    import std.getopt, std.process : getcwd;
 
-    // If job id is specified, default to "travis-ci", unless it's already been set.
-    void jobId( string key, string job )
-    {
-        if( Doveralls.ciServiceName is null || Doveralls.ciServiceName.length == 0 )
-            Doveralls.ciServiceName = "travis-ci";
+    bool help;
+    args.getopt(config.passThrough, "h|help", &help);
 
-        Doveralls.ciServiceJobId = job;
-    }
-    // If pro mode specified, force service name to "travis-pro."
-    void travisPro( string key, string value )
+    if (help)
     {
-        Doveralls.ciServiceName = "travis-pro";
+        import std.stdio;
+        writeln(usage);
+        return 0;
     }
 
-    args.getopt( config.passThrough,
-        "p|path", &Doveralls.repoPath,
-        "t|token", &Doveralls.repoToken,
-        "j|job", &jobId,
-        "travis-pro", &travisPro );
+    bool dump;
+    string path = getcwd(), token, service;
+    args.getopt(config.passThrough,
+        "d|dump", &dump,
+        "p|path", &path,
+        "t|token", &token,
+        "travis-pro", (string k, string v) { service = "travis-pro"; });
 
-    return execute();
+    return execute(path, token, service, dump);
 }

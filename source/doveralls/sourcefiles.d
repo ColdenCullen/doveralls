@@ -1,59 +1,44 @@
 module doveralls.sourcefiles;
-import doveralls.args;
 
-import std.file, std.conv, std.stdio, std.string, std.array, std.typecons,
-       std.algorithm, std.path;
+import std.json;
 
 // Get an array of all source files and their coverage.
-auto getSourceFiles( string path )
+JSONValue[] getSourceFiles(string path)
 {
-    CoverallsArgs.SourceFile[] files;
+    import std.algorithm, std.array, std.conv, std.file, std.path, std.stdio, std.string;
 
-    // Find each source file.
-    foreach( immutable dirEntry; dirEntries( path, "*.d", SpanMode.breadth, true ) )
+    JSONValue[] files;
+    auto coverage = appender!(JSONValue[])();
+    auto source = appender!(char[])();
+
+    foreach (de; dirEntries(path, "*.d", SpanMode.breadth, true))
     {
-        // The name of the D source file.
-        string fileName = dirEntry.name.relativePath( path )
-                                       .chompPrefix( "./" );
-        // The name of the corresponding .lst file.
-        string lstName = fileName.replace( "/", "-" )
-                                 .replace( "\\", "-" )
-                                 .replace( ".d", ".lst" )
-                                 .absolutePath( path );
+        // relative path
+        string relPath = de.name.relativePath(path);
+        string lstPath = relPath.replace("/", "-").replace("\\", "-")
+            .setExtension(".lst").absolutePath(path);
 
-        // If we don't have coverage info, skip the file.
-        if( !lstName.exists() )
-        {
+        if (!lstPath.exists)
             continue;
-        }
 
-        CoverallsArgs.SourceFile file;
-        file.name = fileName;
-
-        // Get the coverage for each line.
-        foreach( line; File( lstName ).byLine( KeepTerminator.no ) )
+        foreach (line; File(lstPath).byLine(KeepTerminator.no))
         {
+            auto parts = line.findSplit("|");
             // Ignore the "filename is x% covered" lines.
-            if( line.countUntil( "|" ) == -1 )
-            {
-                continue;
-            }
+            if (!parts[1].length) continue;
 
-            // Get the numbers.
-            auto split = line.split( "|" );
-            file.source ~= split[ 1..$ ].join( "|" ) ~ "\n";
-            auto hitCountStr = split[ 0 ].strip();
-
-            Nullable!uint hit;
-            if( hitCountStr.length )
-                hit = hitCountStr.to!uint;
-            else
-                hit.nullify();
-
-            file.coverage ~= hit;
+            parts[0] = parts[0].strip();
+            coverage.put(parts[0].length ? JSONValue(parts[0].to!uint) : JSONValue(null));
+            source.put(parts[2]); source.put("\n"); // use UNIX LF
         }
 
-        files ~= file;
+        JSONValue[string] file;
+        file["name"] = relPath;
+        file["coverage"] = coverage.data.dup;
+        file["source"] = source.data.idup;
+        files ~= JSONValue(file);
+        coverage.clear();
+        source.clear();
     }
 
     return files;
