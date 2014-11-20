@@ -1,7 +1,7 @@
 module doveralls.doveralls;
 import doveralls.sourcefiles, doveralls.git, doveralls.request;
 
-int execute(string path, string token, string service)
+int execute(string path, string token, string service, bool dump)
 {
     import std.stdio, std.process : env=environment;
     import std.json;
@@ -66,5 +66,8 @@ int execute(string path, string token, string service)
         data["git"] = git;
     data["run_at"] = Clock.currTime(UTC()).toISOExtString();
 
-    return sendData(JSONValue(data));
+    if (!dump)
+        return sendData(JSONValue(data));
+    writeln(JSONValue(data));
+    return 0;
 }

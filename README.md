@@ -15,6 +15,7 @@ To generate coverage information, it is recommended that you run `dub test -b un
 
 | Argument     | Description                                                       |
 |--------------|-------------------------------------------------------------------|
+| `d`, `dump`  | Dump the json report to stdout instead of uploading it.           |
 | `p`, `path`  | The path of the repo.                                             |
 | `t`, `token` | The Coveralls token for the repo, required when running locally.  |
 | `travis-pro` | Specify this if you are using Travis pro.                         |

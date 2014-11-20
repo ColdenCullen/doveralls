@@ -5,6 +5,7 @@ enum usage = q"USAGE
 Usage:
   doveralls [options]
 
+  -d|--dump     dump report to stdout instead of uploading it
   -p|--path     repo path, default is current dir
   -t|--token    set the repo_token, required to run locally
   --travis-pro  required when using Travis Pro
@@ -24,11 +25,13 @@ int main(string[] args)
         return 0;
     }
 
+    bool dump;
     string path = getcwd(), token, service;
-    args.getopt( config.passThrough,
+    args.getopt(config.passThrough,
+        "d|dump", &dump,
         "p|path", &path,
         "t|token", &token,
         "travis-pro", (string k, string v) { service = "travis-pro"; });
 
-    return execute(path, token, service);
+    return execute(path, token, service, dump);
 }
