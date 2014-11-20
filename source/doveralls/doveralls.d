@@ -61,7 +61,9 @@ int execute(string path, string token, string service)
 
     if (ext.length) data["environment"] = JSONValue(ext);
     data["source_files"] = getSourceFiles(path);
-    data["git"] = getGitEntry(path);
+    auto git = getGitEntry(path);
+    if (git.type != JSON_TYPE.NULL)
+        data["git"] = git;
     data["run_at"] = Clock.currTime(UTC()).toISOExtString();
 
     return sendData(JSONValue(data));
