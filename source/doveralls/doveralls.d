@@ -49,7 +49,7 @@ int execute(string path, string token, string service, bool dump)
     {
         data["service_name"] = "coveralls-ruby";
         data["repo_token"] = token = env.get("COVERALLS_REPO_TOKEN", token);
-        if (!token.length)
+        if (!token.length && !dump)
         {
             stderr.writeln("A repo_token is required when running locally.");
             stderr.writeln("Either pass one as argument or set the COVERALLS_REPO_TOKEN env variable.");
