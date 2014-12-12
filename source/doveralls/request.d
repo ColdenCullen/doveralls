@@ -1,6 +1,6 @@
 module doveralls.request;
 
-import std.json, std.net.curl, etc.c.curl;
+import std.json, std.net.curl, std.stdio, etc.c.curl;
 
 // Send the json arguments to Coveralls.io.
 int sendData(JSONValue data)
@@ -28,12 +28,22 @@ int sendData(JSONValue data)
     curl.set(CurlOption.httpheader, headerlist);
     curl.set(CurlOption.httppost, formpost);
     curl.set(CurlOption.useragent, "doveralls ("~HTTP.defaultUserAgent~")");
+    static extern(C) size_t append(void *buffer, size_t size, size_t nmemb, void *userp)
+    {
+        *cast(string*)userp ~= (cast(char*)buffer)[0 .. size * nmemb];
+        return size * nmemb;
+    }
+    string response;
+    curl.set(CurlOption.writefunction, &append);
+    alias CURLOPTION_WRITEDATA = CurlOption.file; // alias is missing in std.net.curl
+    curl.set(CURLOPTION_WRITEDATA, &response);
     if (auto res = curl.perform(false))
     {
-        import std.stdio, core.stdc.string;
+        import core.stdc.string : strlen;
         auto msg = curl_easy_strerror(res);
         stderr.writeln("Failed to upload data: ", msg[0 .. strlen(msg)]);
         return 1;
     }
+    writeln("Uploaded data to: ", parseJSON(response)["url"].str);
     return 0;
 }
