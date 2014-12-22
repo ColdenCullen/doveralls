@@ -11,6 +11,12 @@ Usage:
   --travis-pro  required when using Travis Pro
 USAGE";
 
+version( unittest )
+int main(string[] args)
+{
+    return 0;
+}
+else
 int main(string[] args)
 {
     import std.getopt, std.process : getcwd;

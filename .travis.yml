@@ -1,0 +1,20 @@
+language: d
+d:
+- dmd-2.066.1
+- ldc-0.15.1
+- gdc-4.9.0
+sudo: false
+
+after_success:
+- cp doveralls doveralls_travis
+deploy:
+  provider: releases
+  api_key:
+    secure: ls26yGIfhuaDGhQ1Fd3DGmA+in7WRB/huPWqxafr5AnZhRvMzoSlCfzzQvtJIL8IiE6GRRnFw8/KgLFpeg6DO3c2bL4h3JVwltLrVO9IshhkqVEVqcGR/9TQGnEgCZX41h1C5NHj2a0yG2F8OXN+MXO5TkzpgEQWpdUHm3BQOTE=
+  file: doveralls_travis
+  skip_cleanup: true
+  on:
+    repo: ColdenCullen/doveralls
+    all_branches: true
+    tags: true
+    d: ldc-0.15.1
