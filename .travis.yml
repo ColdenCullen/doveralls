@@ -17,4 +17,4 @@ deploy:
     repo: ColdenCullen/doveralls
     all_branches: true
     tags: true
-    d: ldc-0.15.1
+    condition: $DC = ldc2
