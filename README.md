@@ -1,4 +1,4 @@
-## doveralls
+## doveralls [![Build Status](https://img.shields.io/travis/ColdenCullen/doveralls.svg?style=flat)](https://travis-ci.org/ColdenCullen/doveralls)
 
 Upload D code coverage results to [coveralls.io](https://coveralls.io/).
 
@@ -25,14 +25,16 @@ To generate coverage information, it is recommended that you run `dub test -b un
 Add this to your script sections.
 ```yml
 install:
-  # ...install dub
-  - dub fetch doveralls
+  # Install doveralls from the latest github release
+  - curl "https://api.github.com/repos/ColdenCullen/doveralls/releases" | jq '.[0].assets | .[] | select(.name == "doveralls_travis") | .browser_download_url' | xargs wget -O doveralls
+  # Or, if you know what version you want, like v1.1.2, you can simply use this instead:
+  - wget -O doveralls https://github.com/ColdenCullen/doveralls/releases/download/v1.1.2/doveralls_travis
 
 script:
   - dub test -b unittest-cov
-  - dub run doveralls
+  - ./doveralls
   # or when using Travis Pro
-  - dub run doveralls -- -travis-pro
+  - ./doveralls -- -travis-pro
 ```
 #### Using doveralls locally
 
