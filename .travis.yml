@@ -6,15 +6,16 @@ d:
 sudo: false
 
 after_success:
-- cp doveralls doveralls_travis
+- dub build --compiler=${DC}
+- cp doveralls doveralls_${TRAVIS_OS_NAME}_travis
 deploy:
   provider: releases
   api_key:
     secure: ls26yGIfhuaDGhQ1Fd3DGmA+in7WRB/huPWqxafr5AnZhRvMzoSlCfzzQvtJIL8IiE6GRRnFw8/KgLFpeg6DO3c2bL4h3JVwltLrVO9IshhkqVEVqcGR/9TQGnEgCZX41h1C5NHj2a0yG2F8OXN+MXO5TkzpgEQWpdUHm3BQOTE=
-  file: doveralls_travis
+  file: doveralls_${TRAVIS_OS_NAME}_travis
   skip_cleanup: true
   on:
     repo: ColdenCullen/doveralls
     all_branches: true
     tags: true
-    condition: $DC = ldc2
+    condition: ${DC} = ldc2
