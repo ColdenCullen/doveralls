@@ -26,7 +26,7 @@ Add this to your script sections.
 ```yml
 install:
   # Install doveralls from the latest github release
-  - wget -q -O - "http://bit.ly/GetDoveralls" | bash
+  - wget -q -O - "http://bit.ly/Doveralls" | bash
   # Or, if you know what version you want, like v1.1.2, you can simply use this instead:
   - wget -O doveralls https://github.com/ColdenCullen/doveralls/releases/download/v1.1.2/doveralls_travis
 
