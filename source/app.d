@@ -19,7 +19,7 @@ int main(string[] args)
 else
 int main(string[] args)
 {
-    import std.getopt, std.process : getcwd;
+    import std.getopt, std.file : getcwd;
 
     bool help;
     args.getopt(config.passThrough, "h|help", &help);
