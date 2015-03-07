@@ -34,7 +34,7 @@ script:
   - dub test -b unittest-cov
   - ./doveralls
   # or when using Travis Pro
-  - ./doveralls -- -travis-pro
+  - ./doveralls -travis-pro
 ```
 #### Using doveralls locally
 
