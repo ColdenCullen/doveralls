@@ -13,14 +13,14 @@ USAGE";
 
 int main(string[] args)
 {
-    import std.getopt, std.process : getcwd;
+    import std.getopt, std.file : getcwd;
 
     bool help;
     args.getopt(config.passThrough, "h|help", &help);
 
     if (help)
     {
-        import std.stdio;
+        import std.stdio : writeln;
         writeln(usage);
         return 0;
     }

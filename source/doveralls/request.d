@@ -28,7 +28,7 @@ int sendData(JSONValue data)
     curl.set(CurlOption.httpheader, headerlist);
     curl.set(CurlOption.httppost, formpost);
     curl.set(CurlOption.useragent, "doveralls ("~HTTP.defaultUserAgent~")");
-    if (auto res = curl.perform(false))
+    if (auto res = curl.perform(ThrowOnError.no))
     {
         import std.stdio, core.stdc.string;
         auto msg = curl_easy_strerror(res);
