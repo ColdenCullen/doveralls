@@ -11,26 +11,26 @@ JSONValue[] getSourceFiles(string path)
     auto coverage = appender!(JSONValue[])();
     auto source = appender!(char[])();
 
-    foreach (de; dirEntries(path, "*.d", SpanMode.breadth, true))
+    foreach (string lstPath; dirEntries(path, "*.lst", SpanMode.breadth, true))
     {
-        // relative path
-        string relPath = de.name.relativePath(path);
-        string lstPath = relPath.replace("/", "-").replace("\\", "-")
-            .setExtension(".lst").absolutePath(path);
-
-        if (!lstPath.exists)
-            continue;
-
+        string relPath;
         foreach (line; File(lstPath).byLine(KeepTerminator.no))
         {
             auto parts = line.findSplit("|");
-            // Ignore the "filename is x% covered" lines.
-            if (!parts[1].length) continue;
-
-            parts[0] = parts[0].strip();
-            coverage.put(parts[0].length ? JSONValue(parts[0].to!uint) : JSONValue(null));
-            source.put(parts[2]); source.put("\n"); // use UNIX LF
+            if (parts[1].length)
+            {
+                parts[0] = parts[0].strip();
+                coverage.put(parts[0].length ? JSONValue(parts[0].to!uint) : JSONValue(null));
+                source.put(parts[2]); source.put("\n"); // use UNIX LF
+            }
+            else
+            {
+                relPath = line.findSplitBefore(" ")[0].idup; // last line "filename is x% covered"
+                break;
+            }
         }
+        if (relPath.empty) // module w/o code, see druntime#1393
+            relPath = baseName(lstPath).split("-").buildPath.setExtension(".d");
 
         JSONValue[string] file;
         file["name"] = relPath;
