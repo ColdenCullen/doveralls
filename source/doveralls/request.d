@@ -44,6 +44,13 @@ int sendData(JSONValue data)
         stderr.writeln("Failed to upload data: ", msg[0 .. strlen(msg)]);
         return 1;
     }
-    writeln("Uploaded data to: ", parseJSON(response)["url"].str);
+
+    auto jsonResponse = parseJSON(response);
+    if (jsonResponse.type != JSON_TYPE.OBJECT || "url" !in jsonResponse.object)
+    {
+        stderr.writeln("Unexpected upload response: ", jsonResponse.toPrettyString);
+        return 1;
+    }
+    writeln("Uploaded data to: ", jsonResponse["url"].str);
     return 0;
 }
