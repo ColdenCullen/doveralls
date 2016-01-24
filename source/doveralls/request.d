@@ -37,7 +37,11 @@ int sendData(JSONValue data)
     curl.set(CurlOption.writefunction, &append);
     alias CURLOPTION_WRITEDATA = CurlOption.file; // alias is missing in std.net.curl
     curl.set(CURLOPTION_WRITEDATA, &response);
-    if (auto res = curl.perform(false))
+    static if (__VERSION__ >= 2067)
+        enum dontThrowOnError = ThrowOnError.no;
+    else
+        enum dontThrowOnError = false;
+    if (auto res = curl.perform(dontThrowOnError))
     {
         import core.stdc.string : strlen;
         auto msg = curl_easy_strerror(res);
