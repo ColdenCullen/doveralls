@@ -13,6 +13,9 @@ JSONValue[] getSourceFiles(string path)
 
     foreach (string lstPath; dirEntries(path, "*.lst", SpanMode.breadth, true))
     {
+        if (lstPath.baseName.startsWith(".."))
+            continue;
+
         string relPath;
         foreach (line; File(lstPath).byLine(KeepTerminator.no))
         {
