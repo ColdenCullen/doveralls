@@ -5,7 +5,10 @@ import std.json, std.net.curl, std.stdio, etc.c.curl;
 // Send the json arguments to Coveralls.io.
 int sendData(JSONValue data)
 {
-    auto json = toJSON(&data, false);
+    static if (__VERSION__ >= 2072)
+        auto json = toJSON(data, false);
+    else
+        auto json = toJSON(&data, false);
 
     curl_httppost* formpost, lastptr;
     curl_formadd(&formpost, &lastptr,
