@@ -1,12 +1,8 @@
 language: d
 d:
 - dmd
-- dmd-2.066.1
 - ldc
-- gdc-4.9.2
-matrix:
-  allow_failures:
-    - d: gdc-4.9.2
+- gdc
 sudo: false
 
 after_success:
