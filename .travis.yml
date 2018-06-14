@@ -3,6 +3,13 @@ d:
 - dmd
 - ldc
 - gdc
+os:
+- linux
+- osx
+matrix:
+  exclude:
+  - os: osx
+    d: gdc
 sudo: false
 
 after_success:
