@@ -11,18 +11,16 @@ matrix:
   - os: osx
     d: gdc
 sudo: false
-
 after_success:
 - dub build --compiler=${DC}
 - cp doveralls doveralls_${TRAVIS_OS_NAME}_travis
 deploy:
   provider: releases
   api_key:
-    secure: ls26yGIfhuaDGhQ1Fd3DGmA+in7WRB/huPWqxafr5AnZhRvMzoSlCfzzQvtJIL8IiE6GRRnFw8/KgLFpeg6DO3c2bL4h3JVwltLrVO9IshhkqVEVqcGR/9TQGnEgCZX41h1C5NHj2a0yG2F8OXN+MXO5TkzpgEQWpdUHm3BQOTE=
+    secure: Zsj3klFEJYlKlZNO4isZwZ11qOt7HCHMvPe5kECuFJ5mP+1wOkWj1V4U/7TXwep9Sv310Jh5T0lUFvkPTl30dFiUYbsIXYtwWRZNfuih+FZgos/YkA+H9SQZy+Jt1mUbWMF/s3f7ogFvdh+rl61hSnDMUDImS3IXuc01FPrWsVk=
   file: doveralls_${TRAVIS_OS_NAME}_travis
   skip_cleanup: true
   on:
     repo: ColdenCullen/doveralls
-    all_branches: true
     tags: true
     condition: ${DC} = ldc2
