@@ -1,19 +1,19 @@
+sudo: false
 language: d
 d:
 - dmd
 - ldc
-- gdc
 os:
 - linux
 - osx
-matrix:
-  exclude:
-  - os: osx
-    d: gdc
-sudo: false
+
+script:
+- dub test --compiler=${DC}
+
 after_success:
-- dub build --compiler=${DC}
+- dub run
 - cp doveralls doveralls_${TRAVIS_OS_NAME}_travis
+
 deploy:
   provider: releases
   api_key:
