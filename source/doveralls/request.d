@@ -2,7 +2,7 @@ module doveralls.request;
 
 import std.json, std.net.curl, std.stdio, etc.c.curl;
 
-// Send the json arguments to Coveralls.io.
+/// Send the json arguments to Coveralls.io.
 int sendData(JSONValue data)
 {
     static if (__VERSION__ >= 2072)
@@ -53,7 +53,7 @@ int sendData(JSONValue data)
     }
 
     auto jsonResponse = parseJSON(response);
-    if (jsonResponse.type != JSON_TYPE.OBJECT || "url" !in jsonResponse.object)
+    if (jsonResponse.type != JSONType.object || "url" !in jsonResponse.object)
     {
         stderr.writeln("Unexpected upload response: ", jsonResponse.toPrettyString);
         return 1;

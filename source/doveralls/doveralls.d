@@ -1,10 +1,21 @@
 module doveralls.doveralls;
 import doveralls.sourcefiles, doveralls.git, doveralls.request;
 
+/**
+ * The tool's entry point.
+ *
+ * Params:
+ *      path =      The path to the root of the repository
+ *      token =     The authorization token for coveralls.io
+ *      service =   Used to differentiate between common services (travis-ci vs travis-pro)
+ *      dump =      Print the coveralls request JSON instead of sending it
+ *
+ * Returns: status code (0 or 1)
+ */
 int execute(string path, string token, string service, bool dump)
 {
     import std.stdio, std.process : env=environment;
-    import std.json;
+    import std.json: JSONValue, JSONType;
 
     JSONValue[string] data;
     JSONValue[string] ext;
@@ -61,8 +72,8 @@ int execute(string path, string token, string service, bool dump)
 
     if (ext.length) data["environment"] = JSONValue(ext);
     data["source_files"] = getSourceFiles(path);
-    auto git = getGitEntry(path);
-    if (git.type != JSON_TYPE.NULL)
+    const git = getGitEntry(path);
+    if (git.type != JSONType.null_)
         data["git"] = git;
     data["run_at"] = Clock.currTime(UTC()).toISOExtString();
 

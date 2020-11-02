@@ -1,7 +1,7 @@
 module app;
 import doveralls.doveralls;
 
-enum usage = q"USAGE
+private enum usage = q"USAGE
 Usage:
   doveralls [options]
 
@@ -26,7 +26,7 @@ int main(string[] args)
 
     if (help)
     {
-        import std.stdio;
+        import std.stdio: writeln;
         writeln(usage);
         return 0;
     }
