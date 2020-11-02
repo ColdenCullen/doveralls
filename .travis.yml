@@ -17,7 +17,7 @@ after_success:
 deploy:
   provider: releases
   api_key:
-    secure: Zsj3klFEJYlKlZNO4isZwZ11qOt7HCHMvPe5kECuFJ5mP+1wOkWj1V4U/7TXwep9Sv310Jh5T0lUFvkPTl30dFiUYbsIXYtwWRZNfuih+FZgos/YkA+H9SQZy+Jt1mUbWMF/s3f7ogFvdh+rl61hSnDMUDImS3IXuc01FPrWsVk=
+    secure: grXb93P/CfPqwT29lpS4dX2ZmzEUEB7hxd+GXlVUq30rp3NIS3sYJcKsZvTEompqfuSnkxK0mAD8uYqjioQoAE2/dhbO62FBDrGshBtXV/DgnEc3SiO1vz7dxTqLiblZq5xd7kf4PuN3fVSXTG9t2ADWAfsj/fZIq86VnHbHpJk=
   file: doveralls_${TRAVIS_OS_NAME}_travis
   skip_cleanup: true
   on:
