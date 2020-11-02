@@ -1,4 +1,4 @@
-## doveralls [![Build Status](https://img.shields.io/travis/ColdenCullen/doveralls.svg?style=flat)](https://travis-ci.org/ColdenCullen/doveralls)
+## doveralls [![Build Status](https://img.shields.io/travis/ColdenCullen/doveralls.svg?style=flat)](https://travis-ci.org/ColdenCullen/doveralls) [![Coverage Status](https://coveralls.io/repos/github/ColdenCullen/doveralls/badge.svg?branch=master)](https://coveralls.io/github/ColdenCullen/doveralls?branch=master)
 
 Upload D code coverage results to [coveralls.io](https://coveralls.io/).
 
