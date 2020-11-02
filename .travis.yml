@@ -8,7 +8,7 @@ os:
 - osx
 
 script:
-- dub test --compiler=${DC}
+- dub test --compiler=${DC} --coverage
 
 after_success:
 - dub run
