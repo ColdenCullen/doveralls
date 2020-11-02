@@ -15,6 +15,8 @@ JSONValue[] getSourceFiles(string path)
     {
         if (lstPath.baseName.startsWith(".."))
             continue;
+        else if (lstPath.isAbsolute)
+            continue;
 
         string relPath;
         foreach (line; File(lstPath).byLine(KeepTerminator.no))
