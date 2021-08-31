@@ -37,7 +37,7 @@ int execute(string path, string token, string service, bool dump)
             stderr.writeln("Either pass ${{ secrets.GITHUB_TOKEN }} as argument or set the COVERALLS_REPO_TOKEN env variable.");
             return 1;
         }
-        data["service_number"] = env["GITHUB_RUN_NUMBER"];
+        data["service_number"] = env["GITHUB_RUN_ID"];
         ext["branch"] = env["GITHUB_REF"];
         ext["commit_sha"] = env["GITHUB_SHA"];
     }
