@@ -26,6 +26,21 @@ int execute(string path, string token, string service, bool dump)
         ext["travis_job_id"] = env["TRAVIS_JOB_ID"];
         ext["travis_pull_request"] = env["TRAVIS_PULL_REQUEST"];
     }
+    else
+    if (env.get("GITHUB_ACTIONS"))
+    {
+        data["service_name"] = "github";
+        data["repo_token"] = token = env.get("COVERALLS_REPO_TOKEN", token);
+        if (!token.length && !dump)
+        {
+            stderr.writeln("The GitHub token is required when running on GitHub Actions.");
+            stderr.writeln("Either pass ${{ secrets.GITHUB_TOKEN }} as argument or set the COVERALLS_REPO_TOKEN env variable.");
+            return 1;
+        }
+        data["service_number"] = env["GITHUB_RUN_ID"];
+        ext["branch"] = env["GITHUB_REF"];
+        ext["commit_sha"] = env["GITHUB_SHA"];
+    }
     else if (env.get("CIRCLECI"))
     {
         data["service_name"] = "circleci";
